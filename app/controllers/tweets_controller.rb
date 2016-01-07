@@ -13,7 +13,8 @@ class TweetsController < ApplicationController
     search_term = params[:search_term]
     if search_term.split('').first == '@'
       user = User.where('lower(handle) LIKE ?', "%#{search_term.downcase.split('@').last}%")
-      @tweets = Tweet.where('lower(body) LIKE ?', "%#{search_term.downcase}%")
+      @tweets = user.first.tweets.order(created_at: :desc) if user.any?
+      # @tweets = Tweet.where('lower(body) LIKE ?', "%#{search_term.downcase}%")
     else
       @tweets = Tweet.where('lower(body) LIKE ?', "%#{search_term.downcase}%")
     end
