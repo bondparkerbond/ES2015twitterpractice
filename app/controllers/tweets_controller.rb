@@ -1,7 +1,11 @@
 class TweetsController < ApplicationController
   
   def index
-    @tweets = Tweet.all.descending
+    if params[:mentions]
+      @tweets = Tweet.where('lower(body) LIKE ?', "%@#{current_user.handle.downcase}%").descending
+    else
+      @tweets = Tweet.all.descending
+    end
   end
 
   def create
