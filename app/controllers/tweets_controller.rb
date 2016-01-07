@@ -1,7 +1,7 @@
 class TweetsController < ApplicationController
   
   def index
-    @tweets = Tweet.all.order(created_at: :desc)
+    @tweets = Tweet.all.descending
   end
 
   def create
@@ -13,10 +13,9 @@ class TweetsController < ApplicationController
     search_term = params[:search_term]
     if search_term.split('').first == '@'
       user = User.where('lower(handle) LIKE ?', "%#{search_term.downcase.split('@').last}%")
-      @tweets = user.first.tweets.order(created_at: :desc) if user.any?
-      # @tweets = Tweet.where('lower(body) LIKE ?', "%#{search_term.downcase}%")
+      @tweets = user.first.tweets.descending if user.any?
     else
-      @tweets = Tweet.where('lower(body) LIKE ?', "%#{search_term.downcase}%")
+      @tweets = Tweet.where('lower(body) LIKE ?', "%#{search_term.downcase}%").descending
     end
     render 'index'
   end
